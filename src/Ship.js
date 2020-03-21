@@ -4,26 +4,29 @@ export default class SpaceShip  {
         this.ctx = animation.ctx
         this.coordinateX = this.canvas.width/2
         this.coordinateY = this.canvas.height/2
-        this.h = 50
+        this.h = 20
         this.coordinateFire = {
             coordinateX : this.coordinateX,
-            coordinateY : this.coordinateY-50
+            coordinateY : this.coordinateY-this.h
         }
     }
 
     init(){
         this.draw()
+
     }
 
     draw(){
+
         this.ctx.beginPath()
+        this.ctx.fillStyle = 'black';
         this.ctx.lineTo(this.coordinateX, this.coordinateY-this.h)//angle au dessus centre
         this.ctx.lineTo(this.coordinateX-this.h, this.coordinateY+this.h)//angle droit bas
         this.ctx.lineTo(this.coordinateX+this.h, this.coordinateY+this.h)//angle gauche haut
         this.ctx.fill()
         this.ctx.closePath()
     }
-    updateCoordinate(){
+    updateCoordinate(request){
 
     }
 }

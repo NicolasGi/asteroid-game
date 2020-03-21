@@ -1,6 +1,6 @@
 import Meteor from "./Meteor";
 import SpaceShip from "./Ship";
-
+import controller from "./controller";
 
 const animation = {
     canvas:null,
@@ -8,16 +8,18 @@ const animation = {
     count:0,
     meteor:[],
     spaceShip:null,
-
+    request:null,
     init(){
         this.canvas = document.getElementById('canvas');
         this.ctx = canvas.getContext('2d');
         this.resizeCanvas()
+        controller.init(this)
+
         for(let i=0; i<this.count; i++) {
             this.meteor.push(new Meteor(this))
         }
-        this.spaceShip = new SpaceShip(this);
 
+        this.spaceShip = new SpaceShip(this);
         this.draw()
         this.animate()
     },
@@ -32,23 +34,27 @@ const animation = {
             this.meteor[i].updateCoordinate()
         }
         this.spaceShip.init()
-        /*let height = 200 * Math.cos(Math.PI / 6);
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(100, 300);
-        this.ctx.lineTo(300, 300);
-        this.ctx.lineTo(200, 300 - height);
-        this.ctx.closePath();
-        //this.ctx.lineTo(100,25);
-        this.ctx.fill();*/
 
     },
     animate(){
         this.draw()
-        window.requestAnimationFrame(()=>{
+        this.request = window.requestAnimationFrame(()=>{
             this.animate()
+
         })
 
+    },
+    moveToDown(){
+        this.spaceShip.coordinateY += 10;
+    },
+    moveToUp(){
+        this.spaceShip.coordinateY -= 10;
+    },
+    moveToLeft(){
+        this.spaceShip.coordinateX -= 10;
+    },
+    moveToRight(){
+        this.spaceShip.coordinateX += 10;
     }
 
 };

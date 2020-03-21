@@ -2,7 +2,7 @@ export default class Meteor {
     constructor(animation){
         this.animation = animation
         this.canvas = this.animation.canvas
-        this.ctx = this.canvas.ctx
+        this.ctx = animation.ctx
         this.radius = 25
         this.coordinateX = this.radius + Math.floor(Math.random() * (this.animation.canvas.width - 2 * this.radius))
         this.coordinateY = this.radius + Math.floor(Math.random() * (this.animation.canvas.height - 2 * this.radius))
@@ -22,7 +22,6 @@ export default class Meteor {
 
         this.ctx.arc(this.coordinateX, this.coordinateY, this.radius, 0, 2 * Math.PI);
 
-        //this.ctx.stroke()
         this.ctx.fill();
         this.ctx.closePath()
     }
