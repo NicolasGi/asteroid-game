@@ -2,7 +2,7 @@ export default class Meteor {
     constructor(animation){
         this.animation = animation
         this.canvas = this.animation.canvas
-        this.ctx = animation.ctx
+        this.ctx = this.animation.ctx
         this.radius = 25
         this.coordinateX = this.radius + Math.floor(Math.random() * (this.animation.canvas.width - 2 * this.radius))
         this.coordinateY = this.radius + Math.floor(Math.random() * (this.animation.canvas.height - 2 * this.radius))
@@ -16,6 +16,7 @@ export default class Meteor {
         this.draw()
     }
     draw() {
+        this.ctx.save()
         this.ctx.beginPath()
 
         this.ctx.fillStyle = this.colorM;
@@ -24,6 +25,7 @@ export default class Meteor {
 
         this.ctx.fill();
         this.ctx.closePath()
+        this.ctx.restore()
     }
     updateCoordinate(){
         if(this.coordinateX > this.canvas.width-this.radius || this.coordinateX < this.radius){

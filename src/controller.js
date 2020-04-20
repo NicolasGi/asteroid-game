@@ -1,28 +1,30 @@
 const controller = {
-    game: null,
-    init(game) {
-        this.game = game
-        window.addEventListener('keydown', (e) => {
-            this.checkClick(e)
-        })
+    keys:{
+        'ArrowRight': Math.PI/15,
+        'ArrowLeft': -Math.PI/15,
+        'ArrowUp': -1,
+        ' ':1
     },
-    checkClick(e) {
+    activeKeys:[],
 
-        if (e.code === 'ArrowUp' || e.keyCode === 90) {
-            this.game.moveToUp()
-        }
-        if (e.code === 'ArrowDown' || e.keyCode === 83) {
-            this.game.moveToDown()
-        }
-        if (e.code === 'ArrowLeft' || e.keyCode === 81) {
-            this.game.moveToLeft()
-        }
-        if (e.code === 'ArrowRight' || e.keyCode === 68) {
-            this.game.moveToRight()
-        }
-        if (e.code === 'Space' || e.keyCode === 32) {
-            console.log('Fire')
-        }
+    init() {
+        document.addEventListener('keydown', (e) => {
+            if(Object.keys(this.keys).includes(e.key) && !this.activeKeys.includes(e.key)){
+                e.preventDefault()
+                e.stopPropagation()
+                this.activeKeys.push(e.key)
+            }
+
+        })
+        document.addEventListener('keyup', (e) => {
+            if(this.activeKeys.includes(e.key)){
+                e.preventDefault()
+                e.stopPropagation()
+                const i = this.activeKeys.indexOf(e.key)
+                this.activeKeys.splice(i, 1)
+            }
+
+        })
     }
 }
 
