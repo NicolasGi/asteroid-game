@@ -1,22 +1,25 @@
 import Meteor from "./Meteor";
 import ship from "./ship";
+import collisionDetector from "./collisionDetector";
+import garbageManager from "./garbageManager";
 
 const animation = {
     canvas:null,
     ctx:null,
     count:4,
-    meteor:[],
+    meteors:[],
     request:null,
 
     init(){
         this.canvas = document.getElementById('canvas');
         this.ctx = canvas.getContext('2d');
+        this.resizeCanvas()
         this.ctx.strokeStyle = '#fff'
         this.ctx.fillStyle = '#fff'
-        this.resizeCanvas()
+
 
         for(let i=0; i<this.count; i++) {
-            this.meteor.push(new Meteor(this))
+            this.meteors.push(new Meteor(this))
         }
 
         ship.init(this.canvas, this.ctx)
@@ -26,15 +29,9 @@ const animation = {
         this.canvas.width = 640;
         this.canvas.height = 480;
     },
-    draw(){
-        for(let i=0; i<this.count; i++){
-            this.meteor[i].init()
-            this.meteor[i].updateCoordinate()
-        }
 
-    },
     animate(){
-        this.request = window.requestAnimationFrame(()=>{
+        window.requestAnimationFrame(()=>{
             this.animate()
         })
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
@@ -42,7 +39,16 @@ const animation = {
         ship.bullets.forEach((bullet)=>{
             bullet.update()
         })
-
+        this.meteors.forEach((meteor)=>{
+            meteor.update()
+        })
+        if(ship.bullets && this.meteors){
+            const collidingPair = collisionDetector.detect(this.ctx, ship, this.meteors )
+            if(collidingPair){
+                garbageManager.remove(collidingPair.bullet, ship.bullets)
+                garbageManager.remove(collidingPair.meteor, this.meteors)
+            }
+        }
     }
 
 };

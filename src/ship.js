@@ -13,6 +13,7 @@ const ship = {
     bulletTimer:-1,
     bulletTimerTreshold: 5,
     bullets: [],
+    path: null,
 
     init(canvas, ctx) {
         controller.init()
@@ -20,6 +21,14 @@ const ship = {
         this.ctx = ctx
         this.location = new Vector(this.canvas.width / 2, this.canvas.height / 2)
         this.speed = new Vector(0, 0);
+        this.path = new Path2D()
+        this.createPath()
+    },
+    createPath(){
+        this.path.moveTo(0, -1.5 * this.size / 2)
+        this.path.lineTo(this.size / 2, 0.5 +(this.size * 1.5/2));
+        this.path.lineTo(-this.size / 2, 0.5 +(this.size * 1.5/2));
+        this.path.closePath()
     },
     checkKeys(){
         controller.activeKeys.forEach((activeKey) => {
@@ -66,13 +75,8 @@ const ship = {
         this.ctx.save();
         this.ctx.translate(this.location.x, this.location.y)
         this.ctx.rotate(this.heading);
-        this.ctx.beginPath()
-        this.ctx.moveTo(0, this.size / 2)
-        this.ctx.lineTo(this.size / 2, this.size * 1.5);
-        this.ctx.lineTo(-this.size / 2, (this.size * 1.5));
-        this.ctx.closePath()
-        this.ctx.stroke()
-
+        //this.ctx.beginPath()
+        this.ctx.stroke(this.path)
         this.ctx.restore()
 
     },

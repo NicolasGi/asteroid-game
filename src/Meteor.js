@@ -1,42 +1,63 @@
+import meteorShapes from "./meteorShapes";
+import Vector from "./Vector";
+
+
 export default class Meteor {
     constructor(animation){
         this.animation = animation
         this.canvas = this.animation.canvas
         this.ctx = this.animation.ctx
-        this.radius = 25
-        this.coordinateX = this.radius + Math.floor(Math.random() * (this.animation.canvas.width - 2 * this.radius))
-        this.coordinateY = this.radius + Math.floor(Math.random() * (this.animation.canvas.height - 2 * this.radius))
-        this.color = ['blue', 'red', 'yellow']
-        this.colorM = this.color[Math.floor(Math.random()*2)+1]
-        this.velocityX = 5 + Math.floor(Math.random()*5) ;
-        this.velocityY = 5 + Math.floor(Math.random()*5);
-    }
+        this.size = 7 + Math.random() * 5
+        this.heading = Math.random() * Math.PI*2
+        this.location = new Vector(Math.random()*this.canvas.width, Math.random()*this.canvas.height )
+        this.speed = new Vector(0,0)
+        this.acceleration = Vector.fromAngle(this.heading, 2+Math.random() * 2)
+        this.speed.add(this.acceleration)
 
-    init(){
+        const asCount = meteorShapes.length
+        const i = Math.floor(Math.random() * asCount)
+        this.shape = meteorShapes[i]
+        this.path = new Path2D()
+        this.createPath()
+
+    }
+    createPath(){
+        this.path.moveTo(this.shape[0]*this.size, this.shape[1]*this.size)
+        let i = 2
+        const shapePointsCount = this.shape.length
+        while(i <= shapePointsCount-2){
+            this.path.lineTo(this.shape[i]*this.size, this.shape[++i]*this.size);
+            i++
+        }
+
+        this.path.closePath()
+    }
+    checkEdges(){
+        const offset = 50
+        if (this.location.y > this.canvas.height + offset) {
+            this.location.y = offset
+        }
+        if (this.location.y < -offset) {
+            this.location.y = this.canvas.height + offset
+        }
+        if (this.location.x > this.canvas.width + offset) {
+            this.location.x = offset
+        }
+        if (this.location.x < -offset) {
+            this.location.x = this.canvas.width + offset
+        }
+    }
+    update(){
+        this.location.add(this.speed)
+        this.checkEdges()
         this.draw()
     }
     draw() {
         this.ctx.save()
-        this.ctx.beginPath()
-
-        this.ctx.fillStyle = this.colorM;
-
-        this.ctx.arc(this.coordinateX, this.coordinateY, this.radius, 0, 2 * Math.PI);
-
-        this.ctx.fill();
-        this.ctx.closePath()
+        this.ctx.translate(this.location.x,this.location.y)
+        this.ctx.rotate(this.heading)
+        //this.ctx.beginPath()
+        this.ctx.fill(this.path)
         this.ctx.restore()
-    }
-    updateCoordinate(){
-        if(this.coordinateX > this.canvas.width-this.radius || this.coordinateX < this.radius){
-            this.velocityX *= -1
-        }
-        if(this.coordinateY > this.canvas.height-this.radius || this.coordinateY < this.radius){
-            this.velocityY *= -1
-
-        }
-        this.coordinateX += this.velocityX
-        this.coordinateY += this.velocityY
-
     }
 }
