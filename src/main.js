@@ -6,7 +6,7 @@ import garbageManager from "./garbageManager";
 const animation = {
     canvas:null,
     ctx:null,
-    count:4,
+    count:1,
     meteors:[],
     request:null,
 
@@ -19,7 +19,7 @@ const animation = {
 
 
         for(let i=0; i<this.count; i++) {
-            this.meteors.push(new Meteor(this))
+            this.meteors.push(new Meteor(this.canvas, this.ctx))
         }
 
         ship.init(this.canvas, this.ctx)
@@ -46,8 +46,17 @@ const animation = {
             const collidingPair = collisionDetector.detect(this.ctx, ship, this.meteors )
             if(collidingPair){
                 garbageManager.remove(collidingPair.bullet, ship.bullets)
+                if(collidingPair.meteor.size > 4){
+                    this.generateSmallMeteor(collidingPair.meteor)
+                }
                 garbageManager.remove(collidingPair.meteor, this.meteors)
             }
+        }
+    },
+    generateSmallMeteor(MeteorParent){
+        const children = Math.floor(2+Math.random()*3)
+        for (let i = 0;i<children;i++){
+            this.meteors.push(new Meteor(this.canvas, this.ctx, MeteorParent))
         }
     }
 

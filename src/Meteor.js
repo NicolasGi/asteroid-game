@@ -3,13 +3,20 @@ import Vector from "./Vector";
 
 
 export default class Meteor {
-    constructor(animation){
-        this.animation = animation
-        this.canvas = this.animation.canvas
-        this.ctx = this.animation.ctx
-        this.size = 7 + Math.random() * 5
+    constructor(canvas, ctx, parent = null){
+        this.canvas = canvas
+        this.ctx = ctx
+        if(!parent){
+            this.size = 7 + Math.random() * 5
+            this.location = new Vector(Math.random()*this.canvas.width, Math.random()*this.canvas.height )
+
+        }else{
+            this.size = parent.size/2
+            this.location = new Vector(parent.location.x, parent.location.y)
+
+        }
         this.heading = Math.random() * Math.PI*2
-        this.location = new Vector(Math.random()*this.canvas.width, Math.random()*this.canvas.height )
+
         this.speed = new Vector(0,0)
         this.acceleration = Vector.fromAngle(this.heading, 2+Math.random() * 2)
         this.speed.add(this.acceleration)
