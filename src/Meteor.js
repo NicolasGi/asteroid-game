@@ -6,14 +6,17 @@ export default class Meteor {
     constructor(canvas, ctx, parent = null){
         this.canvas = canvas
         this.ctx = ctx
+        this.rotation = 0
+
         if(!parent){
             this.size = 7 + Math.random() * 5
             this.location = new Vector(Math.random()*this.canvas.width, Math.random()*this.canvas.height )
+            this.rotationSpeed = Math.random() /30
 
         }else{
             this.size = parent.size/2
             this.location = new Vector(parent.location.x, parent.location.y)
-
+            this.rotationSpeed = parent.rotationSpeed * 2
         }
         this.heading = Math.random() * Math.PI*2
 
@@ -56,13 +59,14 @@ export default class Meteor {
     }
     update(){
         this.location.add(this.speed)
+        this.rotation += this.rotationSpeed
         this.checkEdges()
         this.draw()
     }
     draw() {
         this.ctx.save()
         this.ctx.translate(this.location.x,this.location.y)
-        this.ctx.rotate(this.heading)
+        this.ctx.rotate(this.rotation)
         //this.ctx.beginPath()
         this.ctx.fill(this.path)
         this.ctx.restore()

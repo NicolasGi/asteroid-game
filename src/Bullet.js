@@ -7,7 +7,7 @@ export default class Bullet {
         this.ctx = ship.ctx
         this.location = new Vector(ship.location.x,ship.location.y)
         this.heading = ship.heading
-        this.size = 1
+        this.size = 4
         this.speed = new Vector(ship.speed.x, ship.speed.y)
         this.acceleration = Vector.fromAngle(this.heading, 10)
         this.speed.add(this.acceleration)

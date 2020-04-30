@@ -8,7 +8,7 @@ const animation = {
     ctx:null,
     count:1,
     meteors:[],
-    request:null,
+    requestId:0,
 
     init(){
         this.canvas = document.getElementById('canvas');
@@ -31,7 +31,7 @@ const animation = {
     },
 
     animate(){
-        window.requestAnimationFrame(()=>{
+        this.requestId = window.requestAnimationFrame(()=>{
             this.animate()
         })
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
@@ -43,7 +43,7 @@ const animation = {
             meteor.update()
         })
         if(ship.bullets && this.meteors){
-            const collidingPair = collisionDetector.detect(this.ctx, ship, this.meteors )
+            const collidingPair = collisionDetector.detectBulletMeteorCollision(this.ctx, ship, this.meteors )
             if(collidingPair){
                 garbageManager.remove(collidingPair.bullet, ship.bullets)
                 if(collidingPair.meteor.size > 4){
@@ -52,7 +52,13 @@ const animation = {
                 garbageManager.remove(collidingPair.meteor, this.meteors)
             }
         }
-    },
+        if(ship && this.meteors){
+            if(collisionDetector.detectShipMeteorCollision(this.ctx, ship, this.meteors)){
+
+                window.cancelAnimationFrame(this.requestId)
+            }
+        }
+        },
     generateSmallMeteor(MeteorParent){
         const children = Math.floor(2+Math.random()*3)
         for (let i = 0;i<children;i++){
